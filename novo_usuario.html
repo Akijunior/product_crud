@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Inserir usuário</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/css/materialize.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/js/materialize.min.js"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="vue.min.js"></script>
+    <script src="axios.min.js"></script>
+    <style>
+        .errors {
+            color: red;
+        }
+    </style>
+</head>
+
+<body class="container">
+    <div id='app'>
+        <form>
+            <input v-model="user.nome" placeholder="Username">
+            <input v-model="user.email" placeholder="E-mail">
+            <button @click.prevent="novoUsuario" class="waves-effect waves-light btn">
+                <i class="material-icons right">account_box</i>Criar Usuário
+            </button>
+        </form>
+        <p v-if="response">
+            {{ response.status }} / {{ response.statusText }}
+        </p>
+        <p v-if="errors" class="errors">
+            {{ errors.response.data }}
+        </p>
+    </div>
+
+    <script type="text/javascript">
+        var app = new Vue({
+            el: '#app',
+            data: {
+                user: {
+                    nome: '',
+                    email: ''
+                },
+                response: '',
+                errors: '',
+            },
+            methods: {
+                novoUsuario: function() {
+                    axios.post('http://localhost/users/', this.user)
+                        .then(response => {
+                            this.response = response
+                            this.errors = ''
+                        })
+                        .catch(errors => {
+                            this.errors = errors
+                            this.response = ''
+                        })
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>
